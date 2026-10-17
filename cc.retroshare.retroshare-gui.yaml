@@ -181,6 +181,11 @@ modules:
     - type: shell
       commands:
         - printf 'TEMPLATE = subdirs\nSUBDIRS += RetroChess\n' > plugins/plugins.pro
+        # The bundled 2016 RapidJSON has a copy-assignment that writes a const
+        # member; GCC 14 rejects it. Drop it like upstream RapidJSON did.
+        - sed -i '/GenericStringRef& operator=(const GenericStringRef& rhs) { s = rhs.s; length = rhs.length; }/d'
+          supportlibs/rapidjson/include/rapidjson/document.h
+        - "! grep -q 'GenericStringRef& operator=' supportlibs/rapidjson/include/rapidjson/document.h"
     - type: file
       path: cc.retroshare.retroshare-gui.appdata.xml
     - type: patch
