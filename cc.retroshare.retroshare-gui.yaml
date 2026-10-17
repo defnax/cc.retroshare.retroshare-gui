@@ -154,7 +154,6 @@ modules:
     # Dec 2025), so it cannot be built against the v0.6.7.3 tag.
     - type: git
       url: https://github.com/RetroShare/RetroShare.git
-      branch: master
       commit: 662406b9b39de398dcd13e0c4fda931a9fcb7c45
       disable-shallow-clone: true
     - type: git
