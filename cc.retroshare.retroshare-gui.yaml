@@ -124,6 +124,19 @@ modules:
   # retroshare dependeny for autologin
   - shared-modules/libsecret/libsecret.json
 
+  # restbed dep (rs_jsonapi), header-only standalone ASIO.
+  # Keep < 1.33: restbed still includes asio/io_service.hpp, removed in 1.33.
+  - name: asio
+    buildsystem: simple
+    build-commands:
+      - install -d /app/include
+      - cp -r asio/include/asio.hpp asio/include/asio /app/include/
+    sources:
+      - type: git
+        url: https://github.com/chriskohlhoff/asio.git
+        tag: asio-1-30-2
+        commit: 12e0ce9e0500bf0f247dbd1ae894272656456079
+
   - name: retroshare-gui
     buildsystem: qmake
     config-opts:
@@ -140,6 +153,9 @@ modules:
       - CONFIG+=retroshare_plugins
       - RS_UPNP_LIB=miniupnpc
     build-options:
+      env:
+        # restbed's Findasio.cmake only hints /usr/include and /usr/local/include
+        CMAKE_INCLUDE_PATH: /app/include
       arch:
         aarch64:
           config-opts:
